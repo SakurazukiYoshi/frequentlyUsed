@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        input[type=number] {
+            -moz-appearance:textfield;
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+
+<div>
+    <input type="number" id="input" oninput="(value.length>4)&&(value=value.slice(0,4))">
+</div>
+
+
+
+ <script src="js/zepto.min.js"></script>
+<script>
+
+
+</script>
+</body>
+</html>
