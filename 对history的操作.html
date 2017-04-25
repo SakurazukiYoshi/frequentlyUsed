@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div><a href="#1">1</a></div>
+<div><a href="#2">2</a></div>
+<div><a href="#3">3</a></div>
+<div><a href="#4">4</a></div>
+
+
+<script src="js/zepto.min.js"></script>
+<script>
+    $(function(){
+
+        window.history.pushState("123", "title", "?12312");
+        //console.log(history);
+        //第一参数为送给state的值，history的两个参数length和state
+        // 第二个为页面的标题，title
+        // 三个为url是你想要去的链接，即点击一次然后返回的地址,可以给url增加参数
+        $(window).one("popstate", function() {   //history的state发送变化就会触发
+            alert("点击了上一页");
+            //history.go(-2);  //因为增加了一个历史记录所以点击的时候要返回两页才会到之前的上一页
+        });
+        $("a").click(function(){
+            history.go(0);
+        });
+    });
+</script>
+</body>
+</html>
