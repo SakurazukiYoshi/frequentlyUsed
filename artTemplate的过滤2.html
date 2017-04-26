@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        li{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+<div class="box"></div>
+<script id="id" type="text/html">
+    <ul>
+        <li>{{score}}</li>
+        <br>
+        <li>{{score | fn:{name:"tom",age:18} }}</li>   //对scope进行了处理，后面传参只能传1个数但是可以穿数组,json
+    </ul>
+</script>
+<script src="js/zepto.min.js"></script>
+<script src="js/template.js"></script>
+<script>
+    template.helper('fn',function(arr,str){ //第一个参数默认为|前面的值
+        console.log(str);
+        //return score+"----------"+html+"----------"+str;
+        return str.name;
+    });
+    var score=[1,2,3,4,5];
+    var data = {
+        score:JSON.stringify(score),    //不能传数组
+        str:"hello world"
+    };
+    /*渲染*/
+    var html = template('id',data);
+    /*绑定*/
+    $('.box').html(html);
+</script>
+</body>
+</html>
