@@ -5,3 +5,5 @@
 ## 限制input长度和除去number的自带样式
 
 ## 对history的操作
+
+## artTemplate的基础语法
