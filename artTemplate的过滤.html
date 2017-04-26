@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        li{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+<div class="box"></div>
+<script id="id" type="text/html">
+    <ul>
+        <li>{{score | fn:'123'}}</li>
+        <li>{{score | fn:str}}</li>
+        <li>{{fn(str,"123")}}</li>
+    </ul>
+</script>
+<script src="js/zepto.min.js"></script>
+<script src="js/template.js"></script>
+<script>
+    template.helper('fn',function(score,html){       //传了两个参数score用的数据，html在后面填写
+        return score+"----------"+html;
+    });
+    var data = {
+        score:7,
+        str:"hello world"
+    };
+    /*渲染*/
+    var html = template('id',data);
+    /*绑定*/
+    $('.box').html(html);
+</script>
+</body>
+</html>

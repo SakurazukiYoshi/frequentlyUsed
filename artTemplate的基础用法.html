@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    li{
+        list-style: none;
+    }
+</style>
+<body>
+<div class="box"></div>
+<div class="box1"></div>
+<div class="box2"></div>
+<div class="box4"></div>
+<div class="box5"></div>
+
+
+<script id="id" type="text/html">
+    {{if isAdmin}}
+
+
+    <ul>
+        <li><h1>{{author}}</h1></li>
+        {{each list}}
+        <li>{{$index}}.{{$value}}</li>
+        {{/each}}
+    </ul>
+
+    {{/if}}
+</script>
+
+
+<script id="id1" type="text/html">
+    {{if data}}
+
+
+    <ul>
+        {{each data}}
+        <li><h1>{{$value.name}}</h1></li>
+        <li>{{$index}}.{{$value.age}}</li>
+        <li>{{$index}}.{{$value.sex}}</li>
+        <br>
+        {{/each}}
+    </ul>
+
+    {{/if}}
+</script>
+<script id="id2" type="text/html">
+    {{if flag}}
+    <ul>
+        <li><h1>{{name}}</h1></li>
+        {{each albums}}
+        <li>{{$index+1}}</li>
+        <li><img src="{{$value}}" alt=""></li>
+        {{/each}}
+    </ul>
+
+    {{/if}}
+</script>
+<script id="id3" type="text/html">
+    {{if flag}}
+    <ul>
+        <li><h1>{{name}}</h1></li>
+        {{each albums}}
+        <li>{{$index+1}}</li>
+        <li><img src="{{$value}}" alt=""></li>
+        {{/each}}
+    </ul>
+
+    {{/if}}
+</script>
+
+
+<script id="id4" type="text/html">
+        {{add(a,b)}}
+</script>
+<script id="id5" type="text/html">
+        {{time | dateFormat:'yyyy年 MM月 dd日 hh:mm:ss'}}
+        <br>
+        {{dateFormat(time ,'yyyy年 MM月 dd日 hh:mm:ss')}}
+</script>
+<script src="js/zepto.min.js"></script>
+<script src="js/template.js"></script>
+<script>
+
+/*=====================数据为json的情况============================*/
+    var data = {
+     author: '宫崎骏',
+     isAdmin: true,
+     list: ['千与千寻', '哈尔的移动城堡', '幽灵公主', '风之谷', '龙猫']
+     };
+     var html = template('id', data);
+     $('.box').html(html);
+
+
+
+
+/*=====================数据为数组的情况============================*/
+    var data1=[
+        {
+            name:"tom",
+            age:18,
+            sex:"boy"
+        },{
+            name:"jack",
+            age:19,
+            sex:"girl"
+        }
+    ];
+    var dataChange={data:data1};
+    var html1= template('id1',dataChange);
+    //console.log(html1);
+    $('.box1').html(html1);
+
+
+/*=====================如果标签里面有“”需要带入数据============================*/
+
+    var data2={
+        flag:true,
+        name:"tom",
+        albums:["http://juheimg.oss-cn-hangzhou.aliyuncs.com/cookbook/t/0/9_653116.jpg"]
+    };
+    var html2 = template('id2', data2);
+    //console.log(html2);
+    $('.box2').html(html2);
+
+/*=====================template.compile(str)来代替script的内容============================*/
+
+        var data3={
+            text:"hello world"
+        };
+        var str="";
+        str+="<h1>{{text}}</h1>";
+        var render=template.compile(str);
+        var html3=render(data3);
+        $('.box3').html(html3);
+
+/*=====================template.helper(name, callback) 基本用法============================*/
+
+    template.helper('add',add);
+    function add(a,b){
+        return a+b;
+    }
+    var data4 = {
+        a: 3,
+        b: 4
+    };
+    /*渲染*/
+    var html4 = template('id4', data4);
+    /*绑定*/
+    $('.box4').html(html4);
+
+
+/*=====================template.helper(name, callback) 大牛用法============================*/
+    template.helper('dateFormat',dateFormat);
+    function dateFormat(date,format){
+    date = new Date(date);
+    var map = {
+        "M": date.getMonth() + 1, //月份
+        "d": date.getDate(), //日
+        "h": date.getHours(), //小时
+        "m": date.getMinutes(), //分
+        "s": date.getSeconds(), //秒
+        "q": Math.floor((date.getMonth() + 3) / 3), //季度
+        "S": date.getMilliseconds() //毫秒
+    };
+
+    format = format.replace(/([yMdhmsqS])+/g, function(all, t){
+        var v = map[t];
+        if (v !== undefined) {
+            if (all.length > 1) {
+                v = '0' + v;
+                v = v.substr(v.length - 2);
+            }
+            return v;
+        }
+        else if (t === 'y') {
+            return (date.getFullYear() + '').substr(4 - all.length);
+        }
+        return all;
+    });
+    return format;
+}
+    var data5 = {
+        time: (new Date).toString()
+    };
+    /*渲染*/
+    var html5 = template('id5', data5);
+    /*绑定*/
+    $('.box5').html(html5);
+
+</script>
+
+</body>
+</html>
