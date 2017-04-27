@@ -3,40 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
 </head>
 <body>
+<!--
+
+<div class="box1" style="width: 200px">
+    <p></p>
+</div>
 <div class="box2" style="width: 200px">
     <p></p>
 </div>
+-->
+
+<div class="box3" style="width: 200px" v-cloak>
+    <my-div></my-div>
+    <my-div></my-div>
+</div>
+
+
 
 <script src="js/zepto.min.js"></script>
 <script src="js/template.js"></script>
+<script src="js/vue.min.js"></script>
 <script>
 $(function(){
     var str='《大角牛梦工场》是《小牛向前冲》的续集，通过对主要角色和相关剧情进行延伸性开发制作而成的对广大少年儿童进行“成长教育”的系列动画片。在一个名叫牛大都的美丽小镇上，憨厚的大角牛和他的伙伴们过着自由自在的生活，蝙蝠魔却想尽办法给大角牛们制造种种麻烦……该片通过一个个风趣幽默的故事，让小观众们在欢乐中领悟到做人的道理和安全健康知识。';
-    var str1='《大角牛梦工场》，中领悟到';
+    var str1='《大角牛梦工场》是《小牛向前冲》的续集，通过对主要角色和相关剧情进行延伸性开发制作而成的对广大少年儿童进行“成长教育”的系列动画片。在一个名叫牛大都的美丽小镇上，憨厚的大角牛和他的伙伴们过着自由自在的生活，蝙蝠魔却想尽办法给大角牛们制造种种麻烦……该片通过一个个风趣幽默的故事，让小观众们在欢乐中领悟到做人的道理和安全健康知识。';
+    //var str1='《大角牛梦工场》，中领悟到';
     var width=90;
     spread($(".box2"),str,width);
+    spread($(".box1"),str1,width);
     function spread(obj,str,width){
         var html="";
         if(str.length>=width){ //当输入的str的字数超过width的时候，只显示width字数...展开
             var span="<span>"+str.substring(0, width)+"..." +"</span>";
-            html=span+ "<a href='javascript:;' id='spread'>展开</a>";
+            html=span+ "<a href='javascript:;' class='spread'>展开</a>";
         }else {   //没有超出就正常显示
             html=str;
         }
         obj.find("p").html(html);   //将值文本添加到p标签里
         //live对于生成的标签可以绑定事件，on绑定动态生成的标签，要写全才行如下面
-        obj.on("click","#spread",function(){   //点击展开，显示全部的str，多出衣蛾收起的按钮
-            obj.find("span").html(str+"<a href='javascript:;' id='stop'>收起</a>");
-            $("#spread").remove();
+        obj.on("click",".spread",function(){   //点击展开，显示全部的str，多出衣蛾收起的按钮
+            var span="<span>"+str +"</span>";
+            obj.find("p").html(span+"<a href='javascript:;' class='stop'>收起</a>");
         });
-        obj.on("click","#stop",function(){  //点击收起按钮，返回之前的模式
+        obj.on("click",".stop",function(){  //点击收起按钮，返回之前的模式
             spread(obj,str,width);
         });
     }
 });
 
+
+
+
+</script>
+<script>
+/*    (function(Vue){
+        new Vue({
+            el:".box3",
+            data:{
+                str:'《大角牛梦工场》是《小牛向前冲》的续集，通过对主要角色和相关剧情进行延伸性开发制作而成的对广大少年儿童进行“成长教育”的系列动画片。在一个名叫牛大都的美丽小镇上，憨厚的大角牛和他的伙伴们过着自由自在的生活，蝙蝠魔却想尽办法给大角牛们制造种种麻烦……该片通过一个个风趣幽默的故事，让小观众们在欢乐中领悟到做人的道理和安全健康知识。',
+                text:"",
+                str1:'《大角牛梦工场》，中领悟到',
+                width:80,
+                flag1:false,
+                flag2:false,
+                show:true
+            },
+            methods:{
+                spread:function(str,width){
+                    var html="";
+                    if(str.length>=width){ //当输入的str的字数超过width的时候，只显示width字数...展开
+                        html=str.substring(0, width)+"..." ;
+                        this.flag1=true;
+                    }else {   //没有超出就正常显示
+                        html=str;
+                    }
+                    return html;
+                },
+                open:function(length,width){
+                    if(length>width){
+                        this.flag1=false;
+                        this.flag2=true;
+                    }else {
+                        this.flag1=false;
+                        this.flag2=false;
+                    }
+                    this.show=false;
+                },
+                close:function(){
+                    this.flag1=true;
+                    this.flag2=false;
+                    this.show=true;
+                }
+            }
+        })
+    })(Vue)*/
+
+/*
+
+ <div id="app1">
+     <input type="text" v-model="im">
+     <child :abc="im"></child>
+ </div>
+Vue.component('child', {     //同步绑定
+    props: ['abc'],
+    template: '<span>{{abc}}</span>',
+});
+var app=new Vue({
+    el:"#app1",
+    data:{
+        im:""
+    }
+});
+
+*/
+
+
+(function(Vue){
+    var p="";
+    p+='<p>';
+    p+='    <span v-if="show">{{spread(str,width)}}</span>';
+    p+='    <span v-if="!show" >{{str}}</span>';
+    p+='    <a href="javascript:;" v-if="flag1" @click="open(str.length,width)">展开</a>';
+    p+='    <a href="javascript:;" v-if="flag2" @click="close()">收起</a>';
+    p+='</p>';
+    Vue.component("my-div",{
+        template:p,
+        data:function(){   //component的数据和方式都要用自己的
+            return{
+                str:'《大角牛梦工场》是《小牛向前冲》的续集，通过对主要角色和相关剧情进行延伸性开发制作而成的对广大少年儿童进行“成长教育”的系列动画片。在一个名叫牛大都的美丽小镇上，憨厚的大角牛和他的伙伴们过着自由自在的生活，蝙蝠魔却想尽办法给大角牛们制造种种麻烦……该片通过一个个风趣幽默的故事，让小观众们在欢乐中领悟到做人的道理和安全健康知识。',
+                text:"",
+                str1:'《大角牛梦工场》，中领悟到',
+                width:80,
+                flag1:false,
+                flag2:false,
+                show:true
+            }
+        },
+        methods:{
+            spread:function(str,width){
+                var html="";
+                if(str.length>=width){ //当输入的str的字数超过width的时候，只显示width字数...展开
+                    html=str.substring(0, width)+"..." ;
+                    this.flag1=true;
+                }else {   //没有超出就正常显示
+                    html=str;
+                }
+                return html;
+            },
+            open:function(length,width){
+                if(length>width){
+                    this.flag1=false;
+                    this.flag2=true;
+                }else {
+                    this.flag1=false;
+                    this.flag2=false;
+                }
+                this.show=false;
+            },
+            close:function(){
+                this.flag1=true;
+                this.flag2=false;
+                this.show=true;
+            }
+        }
+
+    });
+
+    new Vue({
+        el: '.box3',
+        data: {
+            data:'《大角牛梦工场》，中领悟到',
+        },
+        methods:{
+
+        }
+    });
+})(Vue);
 
 
 
