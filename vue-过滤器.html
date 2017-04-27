@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        li{
+            list-style: none;
+        }
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <ul class="product" v-cloak>
+        <li v-for="product in keyWord(products,'水果','category') ">
+            {{product.name}}-{{product.category}}
+        </li>
+        <li>{{str | up}}</li>
+    </ul>
+
+<script src="js/vue.min.js"></script>
+<script>
+
+/*===================自定义过滤器，遗憾的告诉你vue2.0已经没有过滤器这个东西了,直接用methods中的办法代替=======================================*/
+/*===================当然一些小的功能还是能使用的只是单纯的数据处理的话,要二次运用转化的数据会失效============*/
+        Vue.filter( 'up' , function(value) {
+            return value.toLocaleUpperCase();
+        });
+        new Vue({
+            el: '.product',
+            data: {
+                str:"abcdefg",
+                products: [
+                    {name: '苹果',price: 25,category: "水果"},
+                    {name: '香蕉',price: 15,category: "水果"},
+                    {name: '雪梨',price: 65,category: "水果"},
+                    {name: '宝马',price: 2500,category: "汽车"},
+                    {name: '奔驰',price: 10025,category: "汽车"},
+                    {name: '柑橘',price: 15,category: "水果"},
+                    {name: '奥迪',price: 25,category: "汽车"}
+                ]
+            },
+            methods:{
+                keyWord:function(arr,str,item) {   //value为送送进来的数据,就是 |前面的值,多个参数第一个为数据
+                    var arr1 = [];
+                    for (var i = 0; i < arr.length; i++) {
+                        if (arr[i][item] == str) {
+                            arr1.push(arr[i]);
+                        }
+                    }
+                    return arr1;
+                }
+            }
+        })
+
+
+
+</script>
+</body>
+</html>

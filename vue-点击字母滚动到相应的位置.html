@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<link rel="stylesheet" href="js/weui.min.css">
+<style>
+.city-letter{
+    position: fixed;
+    top:0;
+    right: 10px;
+}
+.city-letter li{
+    list-style: none;
+}
+
+</style>
+<script src="js/vue.min.js"></script>
+<script src="js/axios.min.js"></script>
+<body>
+
+<div id="app" >
+    <div class="City-out">
+        <div class="city-title">当前定位 :<span class="city-now">芜湖市</span><i class="city-icon"></i></div>
+
+        <div class="city-sort">A</div>
+        <a name="city-first"></a>
+        <div class="cityList-box">
+            <ul>
+                <li>安吉市</li>
+                <li>安康市</li>
+                <li>安庆市</li>
+                <li>鞍山市</li>
+            </ul>
+        </div>
+        <div class="city-sort" id="b">B</div>
+        <a name="city-second"></a>
+        <div class="cityList-box">
+            <ul>
+                <li>蚌埠市</li>
+                <li>保定市</li>
+                <li>宝鸡市</li>
+                <li>包头市</li>
+                <li>蚌埠市</li>
+                <li>保定市</li>
+                <li>宝鸡市</li>
+                <li>包头市</li>
+            </ul>
+        </div>
+        <div class="city-sort">C</div>
+        <a name="city-third"></a>
+        <div class="cityList-box">
+            <ul>
+                <li>成都市</li>
+                <li>成都市</li>
+                <li>成都市</li>
+                <li>成都市</li>
+                <li>成都市</li>
+            </ul>
+        </div>
+        <div class="city-sort">D</div>
+        <a name="city-fourth"></a>
+        <div class="cityList-box">
+            <ul>
+                <li>大同市</li>
+                <li>大同市</li>
+            </ul>
+        </div>
+        <div class="city-sort">E</div>
+        <a name="city-fifth"></a>
+        <div class="cityList-box">
+            <ul>
+                <li>银城市</li>
+                <li>银城市</li>
+                <li>银城市</li>
+                <li>银城市</li>
+                <li>银城市</li>
+            </ul>
+        </div>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <ul>1</ul>
+        <div class="city-letter right-letter">
+            <ul>
+                <li v-for="(letter,index) in letters"><a href="javascript:;" v-on:click="target(index)">{{letter}}</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+        new Vue({
+            el: '#app',
+            data: {
+                letters:["A","B","C","D","E"]
+
+            },
+            methods:{
+                target:function(index){
+                    var top=document.getElementsByClassName("city-sort")[index].offsetTop;
+                    document.body.scrollTop=top;
+                }
+
+            }
+        })
+
+
+
+</script>
+</body>
+</html>

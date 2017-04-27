@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .box{
+            width: 100px;
+            height: 100px;
+            border: 1px solid #000;
+        }
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+
+<div id="app">
+    <my-div ></my-div>
+    <my-span></my-span>
+</div>
+
+
+
+<div id="app1">
+        <input type="text" v-model="im">
+        <child :abc="im"></child>
+</div>
+
+
+<div id="app2" v-cloak>
+    <p>{{total}}</p>
+    <button-son v-on:addson="addFa"></button-son>
+    <button-son v-on:addson="addFa"></button-son>
+    <button-son v-on:addson="addFa"></button-son>
+</div>
+
+<div id="app3" v-cloak>
+    <my-component v-on:click.native="doTheThing"></my-component>
+</div>
+
+<script src="js/vue.min.js"></script>
+<script>
+    (function(Vue){
+
+
+/*============================组件的数据和方法绑定====================================*/
+        Vue.component("my-div",{
+            template:"<div :class='item.name'@click='fn' ><span>{{item.age}}</span></div>",
+            data:function(){   //component的数据和方式都要用自己的
+                return{
+                    item:{name:"tom",age:18}
+                }
+            },
+            methods:{
+                fn:function(){
+                    alert(1);
+                }
+            }
+        });
+
+        new Vue({
+            el: '#app',
+            data: {
+                a:{
+                    name:"tom",
+                    age:18
+                }
+
+            },
+            methods:{
+
+            },
+            components:{'my-span':{template:'<div>hello world</div>'}}
+        });
+
+
+/*============================组件的数据同步绑定====================================*/
+
+/*      绑定的思路
+         <child :abc="im"></child>    //把im的值绑定给data-abc
+         Vue.component('child', {
+         props: ['abc'],       //增加data-abc属性
+         template: '<span>{{abc}}</span>',   //把data-abc的值付给span
+         });
+         data:{
+         im:"123"   //im的值为123
+         }
+ */
+
+
+
+
+    Vue.component('child', {     //同步绑定
+        props: ['abc'],
+        template: '<span>{{abc}}</span>',
+    });
+    var app=new Vue({
+        el:"#app1",
+        data:{
+            im:""
+        }
+    });
+
+
+/*============================组件的方法同步绑定====================================*/
+
+        //使用 $on(eventName) 监听事件
+        //使用 $emit(eventName) 触发事件
+        Vue.component('button-son', {
+            template: '<button v-on:click="addson">{{counter}}</button>',
+            data: function () {
+                return {
+                    counter: 0   //存放本地的计数器  互相不影响，每个单体都不会相互影响
+                }
+            },
+            methods: {
+                addson:function(){
+                    this.counter++;
+                    this.$emit('addson');  //自定义事件，触发这件事件的用  v-on：addson=""即可
+                }
+            }
+        });
+        new Vue({
+            el: '#app2',
+            data: {
+                total: 0
+            },
+            methods: {
+                addFa:function(){
+                    this.total++;   //整体事件每个子事件都会触发这个父事件
+                }
+            }
+        });
+
+
+/*============================组件绑定原生事件====================================*/
+        Vue.component('my-component', {
+            template: '<button>12314</button>',
+        });
+        new Vue({
+            el: '#app3'
+        });
+        function doTheThing(){
+            alert(1);
+        }
+
+
+
+
+    })(Vue)
+</script>
+</body>
+</html>
