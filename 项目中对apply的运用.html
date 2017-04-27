@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="box"></div>
+<script id="id" type="text/html">
+    <h1>{{time | fn}}</h1>
+
+</script>
+<script src="js/zepto.min.js"></script>
+<script src="js/template.js"></script>
+<script>
+
+/*===========================项目中的原代码=============================================*/
+    function F(){   //2个参数
+        var f = eval(arguments[0]);  //执行参数1
+        arguments.splice = [].splice;   //给arguments增加splice功能
+        var p = arguments.splice(1);    //p是第二个参数的数组
+        //dataTime.apply(F,[第二个参数])  obj1.apply(obj2，[]);    obj2借用obj1的方法，F调用dataTime的方法运算出的结果
+        return f.apply(this,p);    //返回的是第二个参数在第一个参数中执行后的结果
+    }
+    function dataTime(m){
+        var time = Math.round(m / 60);
+        return time+"分钟";
+    }
+    console.log(F(dataTime,1475));
+
+
+/*===========================apply的基本用法=============================================*/
+
+    //console.log(Math.max(5,7,9,3,1,6));   Math.max()不能Math.max([]);
+    function getMax2(arr){
+        return Math.max.apply(getMax2,arr);   //getMax2借用Math.max的方法
+    }
+    console.log(getMax2([1,2,3,4,5,6]));
+
+/*===========================与项目相同功能的代码=============================================*/
+    template.helper('fn',function(num){ //第一个参数默认为|前面的值
+        return  Math.round(num/60)+"分钟";
+    });
+    var data = {
+        time:1475
+    };
+    var html = template('id',data);
+    $('.box').html(html);
+
+
+
+</script>
+</body>
+</html>

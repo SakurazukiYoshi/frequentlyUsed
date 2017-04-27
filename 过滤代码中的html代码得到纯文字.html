@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="box"  style="display: none">
+    <div class="line"></div>
+    <div class="v-list">
+        <ul>
+            <li><a href="http://tv.sohu.com/20170427/n490862889.shtml" target="_blank">斯诺登称美为日培训间谍</a></li>
+            <li class="mg"><a href="http://tv.sohu.com/20170426/n490844381.shtml" target="_blank">男子为逃避处罚改名换姓</a></li>
+            <li><a href="http://tv.sohu.com/20170427/n490864451.shtml" target="_blank">男子夜闯金店开枪打老人</a></li>
+            <li class="mg"><a href="http://tv.sohu.com/20170427/n490867023.shtml" target="_blank">小学生遭老师连扇9耳光</a></li>
+            <li><a href="http://tv.sohu.com/20170426/n490844400.shtml" target="_blank">小狮子要亲亲抱抱举高高</a></li>
+            <li class="mg"><a href="http://tv.sohu.com/20170426/n490844392.shtml" target="_blank">铁笼一开豪猪风一般逃跑</a></li>
+        </ul>
+    </div>
+<div class="block hidden">
+    <div class="pic-group">
+
+        <li><a href="http://my.tv.sohu.com/us/312813498/88851720.shtml" target="_blank"><img alt="章泽天私人晚宴 请美国半个时尚圈" src="http://i3.itc.cn/20170427/37b7_fddd5cde_d6f8_fcc7_1434_20887c956c21_2.jpg" height="70" width="100"></a><span><a href="http://my.tv.sohu.com/us/312813498/88851720.shtml" target="_blank">章泽天私人晚宴 请美国半个时尚圈</a></span><em class="txt-bg"></em><em class="play-icon"></em></li>
+        <li><a href="http://my.tv.sohu.com/us/312813498/88857048.shtml" target="_blank"><img alt="依旧是少女！baby产后回归《跑男》" src="http://i2.itc.cn/20170427/37b7_fddd5cde_d6f8_fcc7_1434_20887c956c21_3.jpg" height="70" width="100"></a><span><a href="http://my.tv.sohu.com/us/312813498/88857048.shtml" target="_blank">依旧是少女！baby产后回归<跑男></a></span><em class="txt-bg"></em><em class="play-icon"></em></li>
+        <li class="end"><a href="http://my.tv.sohu.com/us/312813498/88856872.shtml" target="_blank"><img alt="安以轩晒婚纱花絮照 性感大露背" src="http://i0.itc.cn/20170427/37b7_fddd5cde_d6f8_fcc7_1434_20887c956c21_1.jpg" height="70" width="100"></a><span><a href="http://my.tv.sohu.com/us/312813498/88856872.shtml" target="_blank">安以轩晒婚纱花絮照 性感大露背</a></span><em class="txt-bg"></em><em class="play-icon"></em></li></div>
+    <div class="line"></div>
+    <div class="v-list">
+        <ul>
+            <li><a href="http://my.tv.sohu.com/us/312813498/88856512.shtml" target="_blank">黄磊妻子孕期罕见晒照</a></li>
+            <li class="mg"><a href="http://my.tv.sohu.com/us/312813498/88856655.shtml" target="_blank">白百何风波后谈女性</a></li>
+            <li><a href="http://my.tv.sohu.com/us/312813498/88856118.shtml" target="_blank">谢霆锋晒泳照秀好身材</a></li>
+            <li class="mg"><a href="http://my.tv.sohu.com/us/312813498/88856068.shtml" target="_blank">黄轩工作室回应恋情</a></li>
+            <li><a href="http://my.tv.sohu.com/us/312813498/88857117.shtml" target="_blank"><沉默的羔羊>导演去世</a></li>
+            <li class="mg"><a href="http://my.tv.sohu.com/us/312813498/88853499.shtml" target="_blank">张韶涵复出神情疲惫</a></li>
+        </ul>
+    </div>
+</div>
+</div>
+<script src="js/zepto.min.js"></script>
+<script src="js/template.js"></script>
+<script>
+   $(function(){
+       var text=$(".box").html();
+       var reTag = text.replace(/<(?:.|\s)*?>/g,"").replace(/\s+/g,"").replace(/&lt;+/g,"").replace(/&gt;+/g,"");
+       console.log(reTag);
+   });
+</script>
+</body>
+</html>

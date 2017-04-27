@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="box2" style="width: 200px">
+    <p></p>
+</div>
+
+<script src="js/zepto.min.js"></script>
+<script src="js/template.js"></script>
+<script>
+$(function(){
+    var str='《大角牛梦工场》是《小牛向前冲》的续集，通过对主要角色和相关剧情进行延伸性开发制作而成的对广大少年儿童进行“成长教育”的系列动画片。在一个名叫牛大都的美丽小镇上，憨厚的大角牛和他的伙伴们过着自由自在的生活，蝙蝠魔却想尽办法给大角牛们制造种种麻烦……该片通过一个个风趣幽默的故事，让小观众们在欢乐中领悟到做人的道理和安全健康知识。';
+    var str1='《大角牛梦工场》，中领悟到';
+    var width=90;
+    spread($(".box2"),str,width);
+    function spread(obj,str,width){
+        var html="";
+        if(str.length>=width){ //当输入的str的字数超过width的时候，只显示width字数...展开
+            var span="<span>"+str.substring(0, width)+"..." +"</span>";
+            html=span+ "<a href='javascript:;' id='spread'>展开</a>";
+        }else {   //没有超出就正常显示
+            html=str;
+        }
+        obj.find("p").html(html);   //将值文本添加到p标签里
+        //live对于生成的标签可以绑定事件，on绑定动态生成的标签，要写全才行如下面
+        obj.on("click","#spread",function(){   //点击展开，显示全部的str，多出衣蛾收起的按钮
+            obj.find("span").html(str+"<a href='javascript:;' id='stop'>收起</a>");
+            $("#spread").remove();
+        });
+        obj.on("click","#stop",function(){  //点击收起按钮，返回之前的模式
+            spread(obj,str,width);
+        });
+    }
+});
+
+
+
+
+</script>
+</html>
