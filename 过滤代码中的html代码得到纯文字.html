@@ -41,7 +41,7 @@
 <script>
    $(function(){
        var text=$(".box").html();
-       var reTag = text.replace(/<(?:.|\s)*?>/g,"").replace(/\s+/g,"").replace(/&lt;+/g,"").replace(/&gt;+/g,"");
+       var reTag = text.replace(/<(?:.|\s)*?>/g,"").replace(/\s+/g,"").replace(/&(?:.|\s)*?;/g,""); //替换以&开头以;结尾的
        console.log(reTag);
    });
 </script>
