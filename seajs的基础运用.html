@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<div>
+    <button id="box">123123</button>
+</div>
+<script src="js/seajs/Public/home/dists/lib/vendor/sea.js"></script>
+<script>
+    seajs.config({
+        // Sea.js 的基础路径（修改这个就不是路径就不是相对于seajs文件了）
+        base: "seajs",   //定义js文件的根目录，找后面的js文件都相对于这个文件，seajs只要相对于之前的目录即可
+        // 别名配置
+        alias: {      //前面是后面[]中代替js名称的名字，后面为js文件的完整地址相对于上面的根目录
+            "jquery": "jquery/jquery.1.11.1.min.js",
+            "angular":"angular/angular.js",
+            "zepto123":"zepto/zepto.min.js"
+        }
+        /*
+         // 路径配置（用变量表示路径，解决路径层级过深的问题，方便跨项目调用  ）
+         paths: {
+         'gallery': 'https://a.alipayobjects.com/gallery'
+         }
+         */
+    });
+
+    seajs.use(["hello","jquery","angular"],function(a,$,angular,zepto){  //可以使用alias中的别名，也可以直接使用相对于更目录的地址
+        a.sayHello();
+    });
+    seajs.use(["world","zepto123"],function(a){  //可以使用alias中的别名，也可以直接使用相对于更目录的地址
+        console.log(a.text);
+        a.do();
+    });
+
+
+</script>
+
+</body>
+</html>
