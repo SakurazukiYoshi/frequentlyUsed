@@ -42,7 +42,24 @@
    $(function(){
        var text=$(".box").html();
        var reTag = text.replace(/<(?:.|\s)*?>/g,"").replace(/\s+/g,"").replace(/&(?:.|\s)*?;/g,""); //替换以&开头以;结尾的
-       console.log(reTag);
+       //console.log(reTag);
+
+
+
+/*=====================保留前4位后面都用*代替=====================================*/
+       var number=1234567890;
+       var str=number.toString().slice(0,4);
+       //console.log(str);
+       for(var i=0; i<number.length-4; i++){
+           str+="*";
+       }
+       //console.log(str);
+       //console.log(number.length===str.length);
+
+       console.log(""&&2);
+
+
+
    });
 </script>
 </body>
