@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .box{
+            width: 80%;
+            margin: 200px auto;
+        }
+        li{
+            width: 30%;
+            list-style: none;
+            float: left;
+            margin-left: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        .a{
+            position: relative;
+            border-radius: 4px;
+            text-indent: 25px;
+        }
+        .a::before{
+            content: "";
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            border: 1px solid #000;
+            position: absolute;
+            top: -5px;
+            left: 14px;
+            border-radius: 4px;
+            transform:rotate(45deg);
+            -ms-transform:rotate(45deg);
+            -webkit-transform:rotate(45deg);
+            background-color: #19bd9d;
+            z-index: 2;
+        }
+        .b::before{
+            background-color: #fdfdfe !important;
+        }
+
+
+        span{
+            position: relative;
+            z-index: 3;
+        }
+
+        ul{
+            min-width: 350px;
+            position: relative;
+        }
+        ul::after{
+            content: "";
+            display: inline-block;
+            width: 61%;
+            position: absolute;
+            top: 65px;
+            left: 77px;
+            border: 1px solid #000;
+            z-index: -10;
+        }
+
+
+
+    </style>
+</head>
+<body>
+<div class="box">
+    <ul>
+        <li>
+            <p>观影时间</p>
+            <div class="a">
+                <span>1</span>
+            </div>
+        </li>
+        <li>
+            <p>选择人数</p>
+            <div class="a">
+                <span>2</span>
+            </div>
+        </li>
+        <li>
+            <p>选择影厅</p>
+            <div class="a b">
+                <span>3</span>
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="text" id="text"></div>
+<script src="js/zepto.min.js"></script>
+<script>
+    1&&$("#text1").addClass('none')&&$("#text").html("123")&&$("#text").removeClass('text');
+    //console.log(console.log(1));
+    console.log(function(){//console.log(1)
+     return "hello world"});
+</script>
+</body>
+</html>

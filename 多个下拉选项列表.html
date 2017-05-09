@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Title</title>
+    <style>
+        .weui-actionsheet__title{
+            background-color: #f0f0f0;padding: 0;
+        }
+        .weui-actionsheet__title .weui-flex .ul{
+            width: 100%;
+            display: flex;
+        }
+        .weui-actionsheet__title .weui-flex .ul  .show{
+            height: 30px;
+            line-height: 30px;
+        }
+        .weui-actionsheet__title .weui-flex  .ul li{
+            flex: 1;
+            border-right: 1px solid #ccc;
+        }
+        .weui-actionsheet__title .weui-flex .ul li:last-child{
+            border: none;
+        }
+        .weui-actionsheet__title .weui-flex .ul li div{
+            color: #9a9a9a;
+        }
+        .weui-actionsheet__title .weui-flex .ul li div::after{
+            content: "";
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid black;
+            margin-left: 10px;
+        }
+        .weui-actionsheet__title::before{
+            border: none;
+        }
+        .weui-actionsheet{
+            overflow: hidden;
+        }
+        .weui-actionsheet .weui-actionsheet__menu{
+            max-height: 400px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .title-click{
+            position: fixed;
+            width: 100%;
+            padding: 0;
+            top: 0;
+            z-index: 1001;
+
+        }
+    </style>
+    <link rel="stylesheet" href="css/weui.min.css">
+    <link rel="stylesheet" href="css/example.css">
+</head>
+<body>
+<div class="weui-actionsheet__title" id="title">
+    <div class="weui-flex">
+        <ul class="ul">
+            <li><div  class="show" id="area">区域</div></li>
+            <li><div  class="show" id="hot">人气优先</div></li>
+            <li><div  class="show" id="model">模式</div></li>
+        </ul>
+    </div>
+</div>
+<div style="width: 100%;height: 2000px;background-color: red;">
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+    <div  >区域</div>
+</div>
+
+<div class="weui-mask" id="iosMask" style="display: none"></div>
+<div class="weui-actionsheet" id="iosActionsheet" >
+    <div class="weui-actionsheet__menu" id="list">
+        <div class="weui-actionsheet__cell">示例菜单</div>
+        <div class="weui-actionsheet__cell">示例菜单</div>
+        <div class="weui-actionsheet__cell">示例菜单</div>
+        <div class="weui-actionsheet__cell">示例菜单</div>
+    </div>
+    <div class="weui-actionsheet__action">
+        <div class="weui-actionsheet__cell" id="iosActionsheetCancel">取消</div>
+    </div>
+</div>
+
+<script src="js/zepto.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        /*weui.css中  iosActionsheet被移除到了高度的100%，所以点击的时候是从下方滑动进来的，不需要删除即可
+        * -webkit-transform:translateY(100%);transform:translateY(100%);
+        *
+        * */
+        var $iosActionsheet = $('#iosActionsheet');
+        var $iosMask = $('#iosMask');   //蒙层
+        var $title=$('#title');         //下拉选项部分
+        var $list=$('#list');           //包裹下拉显示内容的div
+        $list.css("width",$list.width()+17);  //隐藏下来的滚动条
+        function hideActionSheet() {     //隐藏蒙层和下拉内容
+            $iosActionsheet.fadeOut(200);
+            $iosMask.fadeOut(200);
+            $title.removeClass("title-click");
+        }
+        $iosMask.on('click', hideActionSheet);
+        $('#iosActionsheetCancel').on('click', hideActionSheet);
+
+        $(".show").on("click", function(){
+            $title.addClass("title-click");     //让选项固定位
+            $(".weui-actionsheet").css("top",$title.offset().height);   //下拉列表在选项的下方
+            var str="";
+            /*=========判断点击不同的选项 显示不容的内容===========*/
+            if($(this).attr("id")==="area"){
+                str+='<div class="weui-actionsheet__cell">area1</div>';
+                str+='<div class="weui-actionsheet__cell">area2</div>';
+                str+='<div class="weui-actionsheet__cell">area3</div>';
+                str+='<div class="weui-actionsheet__cell">area4</div>';
+            }
+            if($(this).attr("id")==="hot"){
+                str+='<div class="weui-actionsheet__cell">hot1</div>';
+                str+='<div class="weui-actionsheet__cell">hot2</div>';
+                str+='<div class="weui-actionsheet__cell">hot3</div>';
+            }
+            if($(this).attr("id")==="model"){
+                str+='<div class="weui-actionsheet__cell">model1</div>';
+                str+='<div class="weui-actionsheet__cell">model2</div>';
+                str+='<div class="weui-actionsheet__cell">model3</div>';
+                str+='<div class="weui-actionsheet__cell">model4</div>';
+                str+='<div class="weui-actionsheet__cell">model5</div>';
+                str+='<div class="weui-actionsheet__cell">model5</div>';
+                str+='<div class="weui-actionsheet__cell">model5</div>';
+                str+='<div class="weui-actionsheet__cell">model5</div>';
+                str+='<div class="weui-actionsheet__cell">model5</div>';
+                str+='<div class="weui-actionsheet__cell">model5</div>';
+                str+='<div class="weui-actionsheet__cell">model5</div>';
+                str+='<div class="weui-actionsheet__cell">model5</div>';
+            }
+            $list.html(str);
+
+
+            $iosActionsheet.show(200);
+            $iosActionsheet.addClass('weui-actionsheet_toggle');
+            $iosMask.fadeIn(200);
+        });
+    });
+</script>
+</body>
+</html>

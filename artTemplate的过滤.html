@@ -10,13 +10,19 @@
     </style>
 </head>
 <body>
-<div class="box"></div>
+<div class="box">
+    <span></span>
+</div>
 <script id="id" type="text/html">
     <ul>
         <li>{{score | fn:'123'}}</li>
         <li>{{score | fn:str}}</li>
         <li>{{fn(str,"123")}}</li>
     </ul>
+</script>
+<script id="box" type="text/html">
+    <input type="text" id="input" value="{{data}} " onkeydown="fn({{data}})">
+    <h1 id="h1">{{data}}</h1>
 </script>
 <script src="js/zepto.min.js"></script>
 <script src="js/template.js"></script>
@@ -32,6 +38,7 @@
     var html = template('id',data);
     /*绑定*/
     $('.box').html(html);
+
 </script>
 </body>
 </html>
