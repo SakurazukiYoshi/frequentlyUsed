@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<script>
+
+
+
+
+    function dataTime(m) {        //将s转化为min+“分钟”
+        var time = Math.round(m / 60);
+        return time + "分钟";
+    }
+
+    function checkSearch() {   //影片搜索功能
+        var _inputValue = $('.searchNav input[name="keywords"]').val().replace(/(^\s*)|(\s*$)/g, "");
+        if (_inputValue == '') return false;
+
+
+
+        /*============================搜索以后给缓存数组中增加当前下拉选择内容================================================*/
+        var items = $.parseJSON(sessionStorage.items);
+        items.push(sessionStorage.item);   //记录选择的下来内容
+        sessionStorage.items = JSON.stringify(items);
+    }
+
+    $(function() {
+        // dropload
+        $(".chipCant li").on("click", function(e) {    //影片被点击
+            e.preventDefault();   //阻止了dropload的发生
+            window.location.href = $(this).attr("data-url")  //跳到li的data-url属性上去
+        })
+        var page = 2;
+        $('.chipCant').dropload({   //没起作用
+            scrollArea: window,
+            loadDownFn: function(me) {
+                var url = $('.chipCant').data("url");  //对应影厅的数据连接
+                var num = $('.chipCant').data("count");   //个数
+                var pagesize = $('.chipCant').data("pagesize") || 10;    //每页显示的个数
+                var maxpage = Math.ceil(num / pagesize);   //进一法   总个数/10
+                var number = $("#tabsOne .cur").attr("data-filmtype");  //最新  最热 被选中的那个的type
+                if (+num >= 10 && page <= maxpage) {  //总个数大于或者页数大于2
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        data: {
+                            p: page,
+                            cinema_host_name: "{:I('cinema_host_name')}",
+                            film_sort: number
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (+data.code === 0) {
+                                page++;
+                                var result = template('tpl_chip', data.data_list);
+
+                                $('.chipCant').append(result);
+                                /*$(".chipCant li ").on("click",function(e){
+                                 alert(1);
+                                 e.preventDefault();
+                                 //filmInfo($(this).attr("data-id"));
+                                 })*/
+                                me.resetload();
+                            }
+                        },
+                        error: function(xhr, type) {
+                            alert('Ajax error!');
+                            me.resetload();
+                        }
+                    });
+                } else {
+                    $(".dropload-down").html("");
+                }
+            }
+        });
+        var wid = $(".tabs").width();   //
+        $("#tabs1").each(function(e) {
+            var liw = $(this).find("a").length * 50;
+            console.log("liw==" + liw + "   wid===" + wid);
+            if (liw > wid) {
+                $(this).find("div").width(liw).addClass("end");
+            }
+        })
+        $("#tabs3,#tabs2").each(function(e) {
+            var liw = $(this).find("a").length * 64;
+            console.log("liw==" + liw + "   wid===" + wid);
+            if (liw > wid) {
+                $(this).find("div").width(liw).addClass("end");
+            }
+        })
+        $(".chipCant li ").on("click", function(e) {
+            e.preventDefault();
+            /*filmInfo($(this).attr("data-id"));*/
+            /*$("#loadingToast").show();*/
+        })
+    })
+
+    /*获取影片图片大图*/
+    function enlargeImg() {
+        var imgUrl = $("#enlarge").attr("src");
+        $("#swImg").attr("src", imgUrl);
+        /*$("#dialogimg").hide();*/
+        $("#imgFlog").show();
+    }
+
+    function show() {
+        layer.close(index);
+        //$("#dialogimg").show(2000);
+        $(".details_info").each(function(i) {
+            var divH = $(this).height();
+            var $p = $(this).find("p");
+            /*var $p = $("p", $(this)).eq(0);  */
+            console.info($p)
+            while ($p.height() > divH) {
+                $p.text($p.text().replace(/(\s)*([a-zA-Z0-9]+|\W)(\.\.\.)?$/, "..."));
+            };
+        });
+    }
+    // 星星判断方法
+    function compute(score) {
+        var html = "";
+        var count = parseInt(score / 2);
+        for (var i = 0; i < 5; i++) {
+            if (i < count) {
+                html += '整星';
+            } else {
+                if (score % 2 > 0) {
+                    html += " 半星星 ";
+                } else {
+                    html += " 灰色星 ";
+                }
+            }
+        }
+        return html;
+    }
+
+    function closeClick() {
+        $("#imgFlog").hide();
+    }
+
+    function F() {
+        var f = eval(arguments[0]);
+        arguments.splice = [].splice;
+        var p = arguments.splice(1);
+        return f.apply(this, p);
+    }
+    template.helper('F', F);
+
+    function changeClass( frm ) {
+        var val = $( frm ).val();
+        window.location.href = '{:U("chipselect",I("request."))}?callbackurl=' + "{:I('get.callbackurl', '', 'urlencode')}" + '&video_class_id=' + val;
+    }
+</script>
+<script >
+    function downSelect(){
+        var $showButton=$("#showButton");
+        var $showList=$("#showList");
+        var $Mask = $showList.find('.weui-mask');
+        var $listItems=$showList.find(".listItem");
+
+        if(sessionStorage.item && sessionStorage.count !=0){   //临时缓存存在并且是第一次进入的时候，显示的是之前点击的内容
+            $showButton.html(sessionStorage.item);   //下拉列表显示的类容是缓存中的内容
+            for(var i=0; i<$listItems.length; i++){    //刷新页面的时候，选择的那个内容文字变成黄色
+                if($listItems.eq(i).html()==sessionStorage.item){
+                    $listItems.eq(i).css("color","yellow");
+                }
+            }
+        }else {  //当临时缓存不在的时候，下拉列表中的显示的内容是想象中的第一个
+            $showButton.html($showList.find(".listItem").eq(0).html());
+            $listItems.eq(0).css("color","yellow");
+            sessionStorage.item=$showList.find(".listItem").eq(0).html();
+            sessionStorage.items=JSON.stringify([]);      //为空数组
+        }
+        $("#showClick").on('click', function(){   //点击出现下拉选择
+            $showList.show(200);
+            $Mask.on('click',function () {   //选择蒙层以外的代码隐藏list层
+                $showList.hide(200);
+            });
+        });
+        $showList.find(".listItem").click(function(){
+            sessionStorage.count=1;   //点击下拉框一次增加一次
+        });
+        /*===============================点击返回上一页的功能=============================================*/
+        $(function(){
+            window.history.pushState("", "title", "");
+            $(window).one("popstate", function() {   //点击了返回上一页
+                var items=$.parseJSON(sessionStorage.items);    //存了之前选择的下拉内容和历史记录
+                if(items != 0){   //点击了下拉框才记录历史
+                    sessionStorage.item=items.pop();    //将下拉内容存到item中并且删除数组的最后一个
+                    sessionStorage.items=JSON.stringify(items);
+                }
+                history.go(-2);
+            });
+        });
+
+
+
+    }
+</script>
+<script>
+    /*=============顶部下拉选择框的实现==================*/
+    $(function(){
+        downSelect();    //下拉的生成
+        $("#showList").find(".listItem").click(function(){   //点击下拉选项
+            var items=$.parseJSON(sessionStorage.items);
+            items.push(sessionStorage.item);   //记录选择的下来内容
+            sessionStorage.items=JSON.stringify(items);
+            sessionStorage.item = $(this).html();      //记录当前点击的下来框的值
+            window.location.href = '{:U("chipselect",I("request."))}?callbackurl=' + "{:I('get.callbackurl', '', 'urlencode')}" + '&video_class_id=' + $(this).attr("data-id");
+        });
+    });
+</script>
+</body>
+</html>

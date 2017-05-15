@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<select name="" class="btn">
+    <option value="11">1</option>
+    <option value="22">2</option>
+    <option value="33">3</option>
+    <option value="44">4</option>
+</select>
+<script src="../../js/zepto.min.js"></script>
+<script>
+    $(".btn").click(function(){
+        console.log($(this)[0].selectedIndex);
+    })
+</script>
+<body>
+<script>
+    $(function () {
+        var data_time = {:json_encode($startTime)};   //购买时间的对象  开始时间show+结束时间数组end
+
+        //开始时间选择事件
+        $('#time-start').on("change",function(){   //开始时间呗点击
+            var time = Number($(this).val())+Number($(".ft").attr("data-time"));//按影片模式选了影片以后， 开始时间+影片的时间
+            var strTime = dateFormat(time,'hh:mm');//根据切换的时间来换算出预计散场时间，将s转为小时和分钟的形式
+            $(".ft span").text(strTime);        //预计散场事件显示出来
+            var index=$(this)[0].selectedIndex;   //select 元素的自带属性   选中的选项的index，从0开始
+            var endtime=data_time[index].end;   //找到对于的结束时间
+            var len=endtime.length;         //结束时间的数组长度
+            var val = $(this).val();        //开始的时间
+            $('.order').each(function(){     //人气人数价格下拉按钮，修改data-href和href属性
+                var old = $(this).attr('data-href') || $(this).attr('href');
+                $(this).attr('data-href',old).attr('href',old+'/time/'+val);
+            });
+            var old = $('#select-startime').attr('data-href') || $('#select-startime').attr('href');  //获取他们的地址
+            $('#select-startime').attr('data-href',old).attr('href',old+encodeURIComponent('/time/'+val)) ;  //给选项加上
+            /*<div class="list ft" data-time="{$video['time']}">预计散场时间{:date('H:i',$startTime[0]['value']+$video['time'])}</div>*/
+            var html;
+            for(var i=0;i<len;i++)
+            {
+                html+="<option value="+endtime[i].value +">"+endtime[i].show.replace('次日','')+"</option>"
+            }
+            $("#ordertimelen").html(html);  //结束时间添加上html内容
+            showhall();
+        });
+        reserveClick();
+        if(Number($('#time-start').val())+3600*2!=$('#ordertimelen').val()){
+            $('#time-start').val([{$time1}]).trigger('change');
+        }
+
+        $("#ordertimelen").on("change",function(){   //结束的下拉改变下面的影厅数据改变
+            showhall();
+
+        })
+        // 支付
+        $('.js_container').on('click', '.showDialogPay', function () {   //没有账号
+            var $this=$(this);
+            var starttime=parseInt($("#time-start").val(),10);
+            var hours=parseInt($("#ordertimelen").val(),10);
+            var type=+$("#time-start").data("module");//2包时段 1包影片
+            var endtime=starttime+hours*3600;
+            var aa=1;
+            if(type===1){
+                endtime='';
+            }
+
+            if(type===1&&!$("#time-start").data("video-id")){
+                formlogin.showMsg("请选择影片",1500,function(){
+
+                });
+            }else{
+                $.ajax({
+                    url: "{:U('Order/getUnPayOrder')}",
+                    type: 'post',
+                    dataType: 'json',
+                    success:function(res){
+                        if (res.status_code == 1) {
+                            console.log(1);
+                            var index=layer.open({
+                                content: '你还有一笔未支付的订单，是否支付？',
+                                btn: ['立即支付', '取消订单'],
+                                shadeClose: false,
+                                yes: function(){
+                                    layer.close(index);
+//                                window.location.href="/Wechat/Order/pay/net_order_sn/"+res.net_order_sn;
+                                    window.location.href="{:U('Order/pay')}/net_order_sn/"+res.net_order_sn;
+                                }, no:function(){
+
+                                    $.get("{:U('Order/cancelOrder')}/net_order_sn/"+res.net_order_sn,function(dtn){
+                                        if (dtn.status==1) {
+                                            layer.close(index);
+                                            //点击取消支付后弹出支付，支付现在一笔订单
+                                            $('#dialogPay').show();
+                                            var parents=$this.parents(".weui_cell").find(".showimg");
+                                            var times_all=parents.data("tomorrow");
+                                            var time_nav;
+                                            if (times_all=="0") {
+                                                time_nav =$('#time-start option:selected').text() + '-' + $('#ordertimelen option:selected').text();
+                                            }
+                                            if (times_all=="1") {
+                                                time_nav = "明天&nbsp;"+parents.data("period")+"&nbsp;"+$('#time-start option:selected').text() + '-' + $('#ordertimelen option:selected').text();
+                                            }
+                                            if (times_all=="2") {
+                                                time_nav = "后天&nbsp;"+parents.data("period")+"&nbsp;"+$('#time-start option:selected').text() + '-' + $('#ordertimelen option:selected').text();
+                                            }
+                                            var _hallname = parents.data("name"),
+                                                    _cinema=parents.data("cinemaname"),
+                                                    _num = parents.data("people"),
+                                                    _price = parents.data("price"),
+                                                    _alltime =time_nav+parents.data("data-people"),
+                                                    _film_title=$(".shop_title").text(),
+                                                    _allprice = type===2?(parseFloat(_price)*parseFloat($('#ordertimelen').val())).toFixed(1): _price;
+                                            var _data={'cinema':_cinema,'hallname':_hallname,'num':_num,'price':_price,'alltime':_alltime,'allprice':_allprice,'film_title':_film_title};
+                                            $('#payform input[name ="hall_id"]').val(parents.data("id"));
+                                            $('#payform input[name ="host_name"]').val(parents.data("hostname"));
+                                            $('#payform input[name ="start_time"]').val(starttime);
+                                            $('#payform input[name ="end_time"]').val(endtime);
+                                            var _html = template('listdetail',_data);
+                                            $('#content').html(_html);
+                                            $('#dialogPay').find('.weui_btn_cancel').on('click', function () {
+                                                $('#dialogPay').hide();
+                                            });
+                                        }else{
+                                            layer.msg(dtn.info);
+                                        }
+                                    })
+
+                                }
+                            });
+                        }else{
+                            $('#dialogPay').show();
+                            var parents=$this.parents(".weui_cell").find(".showimg");
+                            var time_nav;
+                            //console.info(parents);
+                            var times_all=parents.data("tomorrow");
+                            if (times_all=="0") {
+                                time_nav =$('#time-start option:selected').text() + '-' + $('#ordertimelen option:selected').text();
+                            }
+                            if (times_all=="1") {
+                                time_nav = "明天&nbsp;"+parents.data("period")+"&nbsp;"+$('#time-start option:selected').text() + '-' + $('#ordertimelen option:selected').text();
+                            }
+                            if (times_all=="2") {
+                                time_nav = "后天&nbsp;"+parents.data("period")+"&nbsp;"+$('#time-start option:selected').text() + '-' + $('#ordertimelen option:selected').text();
+                            }
+                            var _hallname = parents.data("name"),
+                                    _cinema=parents.data("cinemaname"),
+                                    _num = parents.data("people"),
+                                    _price = parents.data("price"),
+                                    _alltime =time_nav,
+                                    _film_title=$(".shop_title").text(),
+                                    _allprice = type===2?(parseFloat(_price)*parseFloat($('#ordertimelen').val())).toFixed(1): _price;
+                            var _data={'cinema':_cinema,'hallname':_hallname,'num':_num,'price':_price,'alltime':_alltime,'allprice':_allprice,'film_title':_film_title};
+                            $('#payform input[name ="hall_id"]').val(parents.data("id"));
+                            $('#payform input[name ="host_name"]').val(parents.data("hostname"));
+                            $('#payform input[name ="start_time"]').val(starttime);
+                            $('#payform input[name ="end_time"]').val(endtime);
+                            var _html = template('listdetail',_data);
+                            $('#content').html(_html);
+                            $('#dialogPay').find('.weui_btn_cancel').on('click', function () {
+                                $('#dialogPay').hide();
+                            });
+                        }
+                    }
+                });
+
+
+            }
+        });
+
+        $('#submitPay').on('click', function () {
+            $.ajax({
+                url: $('#payform').attr('action'),
+                type: 'post',
+                data: $('#payform').serialize(),
+                dataType: 'json',
+                success:function(res){
+                    $('#dialogPay').hide();
+                    if(res.status == 1){
+                        window.location.href = res.url;
+                    }else{
+                        if (res.info=="未绑定!") {
+                            window.location.href = res.url;
+                        }else{
+                            formlogin.showMsg(res.info,1500,function(){
+                                if(res.info=="购买失败!时间不可订!"){
+                                    window.location.href = res.url;
+                                }else{
+                                    if(res.url!=''){
+                                        window.location.href= res.url;
+                                    }
+                                }
+
+                            });
+                        }
+                    }
+                }
+            });
+            return false;
+            //$('#payform').submit();
+        });
+    })
+    //显示数据
+    function showhall(){
+        var module=parseInt($("#time-start").data("module"),10);  //10进制显示  观影模式  1按影片 2按时段
+        var starttime=parseInt($("#time-start").val(),10);   //开始的时间  毫秒
+        var  hours=parseInt($("#ordertimelen").val(),10);   //按时段，结束的时间选项对应的value
+
+        var endtime=starttime+hours*3600;   //算出结束的时间
+        var url=$('#time-start').data("href");
+        var params= module===2? {     //当module==2的时候
+            orderstart:starttime,
+            orderend:endtime,
+            play_module:module
+        }
+                : {//当module==1的时候
+            orderstart:starttime,
+            play_module:module,
+            video_id:$('#time-start').data("video-id"),
+            video_time:$('#time-start').data("video-time")
+        };
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: params,
+            dataType: 'json',
+            success:function(res)
+            {
+                if(+res.code===0){
+
+                    template.helper('orderstatus', function (status,format) {
+                        if(+status>0)   //数据是res.halls.data.reserve_status
+                        {
+                            <if condition='$userInfo["id"] gt 0'>
+                                format = '<a class="order_btn showDialogPay" href="javascript:;">购买</a>';
+                                <else />
+                                format = '<a class="order_btn" href="{:U('Index/login')}?dst={:urlencode(U('',array('id'=>$cinema_id,'module'=>$modl,'order'=>$order,'date'=>I('date'))))}">购买</a>';
+                            </if>
+                        }
+                        else{
+                            format= ' <a class="order_btn order_dis" >订完</a>';
+                        }
+                        return format;
+                    });
+                    var result = template('celllist',res.halls);  //<script  id="celllist" type="text/html">中的模板
+
+                    $('.listbox').html(result);  //输出下方的列表
+
+
+                }
+                else{   //另一种情况
+
+                    $(".listbox").html('<p class="nocont"><img src="__PUBLIC__/Wechat/dist/images/emptyicon.png" alt="" width="100px"/><br>抱歉，所有影厅都已经被订完啦！</p>');
+
+                }
+            }
+        });
+
+
+
+    }
+    /* 格式化时间方法 */
+    function dateFormat(date, format) {
+        date = new Date(date * 1000);
+        var map = {
+            "M": date.getMonth() + 1, //月份
+            "d": date.getDate(), //日
+            "h": date.getHours(), //小时
+            "m": date.getMinutes(), //分
+            "s": date.getSeconds(), //秒
+            "q": Math.floor((date.getMonth() + 3) / 3), //季度
+            "S": date.getMilliseconds() //毫秒
+        };
+        format = format.replace(/([yMdhmsqS])+/g, function (all, t) {
+            var v = map[t];
+            if (v !== undefined) {
+                if (all.length > 1) {
+                    v = '0' + v;
+                    v = v.substr(v.length - 2);
+                }
+                return v;
+            }else if (t === 'y') {
+                return (date.getFullYear() + '').substr(4 - all.length);
+            }
+            return all;
+        });
+        return format;
+    }
+    //给预定三天添加事件
+    function reserveClick(){
+    }
+</script>
+<script>
+    $(document).ready(function(){
+        var selValue = $("#time-start").val();
+        $('#time-start').val(selValue).trigger('change');
+    });
+
+
+    /*=============================点击以后刷新影片库的下拉列表缓存=====================================================*/
+    $("#select-startime").click(function(){
+        sessionStorage.count=0;    //表示重新进入影片库
+    });
+    $(".patternRight").click(function(){
+        if(!sessionStorage.cinema_url){
+            sessionStorage.cinema_url=window.location.href;
+        }
+    })
+</script>
+</body>
+</html>

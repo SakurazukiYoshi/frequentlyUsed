@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .search{
+            width: 400px;
+            border: 5px solid #ccc;
+            padding: 5px 3px;
+            border-radius: 5px;
+            background-color: white;
+        }
+        .search_cancel {
+            float: right;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 0 5px;
+            color: #d74142;
+            display: none;
+        }
+
+        input{
+            width: 80%;
+            border: none;
+        }
+        input:focus{outline:0 !important}
+        .searchBox_on{
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            z-index: 10010;
+        }
+        .searchBox_body{
+            overflow: hidden;
+        }
+
+
+    </style>
+</head>
+<body>
+<div>
+    <section class="searchBox">
+        <div class="search">
+            <span class="search_cancel js_search_cancel">取消</span>
+            <div class="input_cont">
+                <input type="text" name="keywords" value="" placeholder="搜索影院名、地址" id="js_search">
+            </div>
+        </div>
+    </section>
+    <div>1231231241241</div>
+    <div>1231231241241</div>
+    <div>1231231241241</div>
+    <div>1231231241241</div>
+    <div>1231231241241</div>
+    <div>1231231241241</div>
+</div>
+</body>
+<script type="text/html" id="tpl_search">
+    <div class="searchWrap"></div>
+</script>
+<script src="js/zepto.min.js"></script>
+<script>
+    /*==========================公众号首页搜索栏聚焦以后发生的事件,聚焦以后其他dom消失只留下input===================================*/
+    $.fn.wxSearch = function(options) {
+        var $this = $(this);     //绑定的元素
+        var $parents = $this.parents('.searchBox');
+        var init = function() {   //定义入口
+            $('body,html').scrollTop(0);    //滚动到最上方
+            $parents.addClass('searchBox_on');   //input的父元素加上searchBox_on（拉伸全部然后Z突出）
+            $parents.find('.search_cancel').show(); //取消按钮 出现
+            $('body').addClass('searchBox_body');   //增加class     overflow: hidden;
+            var _mask = $('<div id="searchMark" style="position:absolute;z-index:1000;background:rgba(0,0,0,0);top:0;left:0;right:0;bottom:0"></div>');
+            $parents.siblings().hide();  //<section class="searchBox">  的兄弟节点隐藏
+            _mask.appendTo("body");   //增加蒙层
+            var $tpl = $($('#tpl_search').html());    //<script type="text/html" id="tpl_search">中的内容一个div
+            $('body').prepend($tpl);
+            $this.focus(); //点击的文本框聚焦
+            $('.js_search_cancel').click(function(){   //取消点击后的事件
+                $this.val('');   //清空文本框
+                $('#searchMark,#tpl_search').remove();      //两个dom被移除
+                $('body').removeClass('searchBox_body');
+                $parents.removeClass('searchBox_on');
+                $parents.find('.search_cancel').hide();   //取消隐藏
+                $parents.siblings().show();
+                /*======================注意这里可能会加赞script脚本 特别留心===============================*/
+            });
+        };
+        return init();   //返回私有方法
+
+    };
+    $("#js_search").focus(function(){
+        $(this).wxSearch();
+    })
+</script>
+</html>

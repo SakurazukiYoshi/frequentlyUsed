@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="js/zepto.min.js"></script>
+<script>
+    function fn(){
+        var e={
+            init:function(){
+                console.log(this);   //是fn().init();后执行  所以对象为fn()  就是e
+            },
+            abb:function(){
+                this.init();//这里的this指的是fn
+            }
+        };
+        return e;
+    }
+   fn().abb();
+    //fn().abb();
+
+/*
+    function a(){
+        var user = "追梦子";
+        console.log(this.user); //undefined
+        console.log(this); //Window
+    }
+    a();     //等同于window.a()
+    window.a();
+
+    */
+
+/*    var o = {
+        user:"追梦子",
+        fn:function(){
+            console.log(this.user);  //追梦子
+            console.log(this);  //追梦子
+        }
+    };
+    o.fn();  //this 为o*/
+
+
+/*    var o = {
+        user:"追梦子",
+        fn:function(){
+            console.log(this.user); //追梦子
+        }
+    };
+    window.o.fn();*/
+
+
+/*
+    var o = {
+        a:10,
+        b:{
+            a:12,
+            fn:function(){
+                console.log(this.a); //12
+            }
+        }
+    };
+    o.b.fn();
+*/
+
+
+/*    var o = {
+        a:10,
+        b:{
+            // a:12,
+            fn:function(){
+                console.log(this.a); //undefined
+            }
+        }
+    }
+    o.b.fn();*/
+/*
+
+     //特殊
+    var o = {
+        a:10,
+        b:{
+            a:12,
+            fn:function(){
+                console.log(this.a); //undefined
+                console.log(this); //window
+            }
+        }
+    };
+    var j = o.b.fn;
+    j();  //window.j();   所以为window  this永远指向的是最后调用它的对象
+
+*/
+/*
+
+    //如果返回值是一个对象，那么this指向的就是那个返回的对象，如果返回值不是一个对象那么this还是指向函数的实例。
+    function fn()
+    {
+        this.user = '追梦子';
+        //return undefined;
+        return{
+            user:this.user,
+            name:123
+        }
+    }
+    var a = new fn;
+    fn();
+    console.log(a); //fn {user: "追梦子"}
+*/
+
+</script>
+</body>
+</html>

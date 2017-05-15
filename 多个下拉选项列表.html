@@ -60,6 +60,7 @@
     <link rel="stylesheet" href="css/example.css">
 </head>
 <body>
+<div>11231231</div>
 <div class="weui-actionsheet__title" id="title">
     <div class="weui-flex">
         <ul class="ul">
@@ -150,6 +151,7 @@
             $iosActionsheet.fadeOut(200);
             $iosMask.fadeOut(200);
             $title.removeClass("title-click");
+            $(window).scrollTop(0);
         }
         $iosMask.on('click', hideActionSheet);
         $('#iosActionsheetCancel').on('click', hideActionSheet);
@@ -192,6 +194,105 @@
             $iosMask.fadeIn(200);
         });
     });
+</script>
+<script>
+    function navSelect() {
+        var e = {
+            _currMenu: null ,
+            _url: window.location.href,    //当前网址
+            _search: window.location.search,   //url ?后面的部分
+            _$mask: null ,
+            _opts: {},
+            init: function() {
+                var t = this;   //如果是：navSelect().init();这样调用，指向的是e
+                this._initNav();   //这里的this指的是 e，所以是e.initNav() 所以initNav中的this也是表示的是e
+                $("body").click(function() {
+                    t._closeMenu();      //body被点击，就恢复原样，下来部分外的内容被点击才会发生
+                }).removeClass("body");
+                $("#poifilter-bar").click(function(e) {     //下拉部分被点击
+                    $("#poifilter-bar").addClass("add_mune");   //下拉就变得相对定位，定位在最上面
+                    e.stopPropagation();   //阻止冒泡
+                });
+            },
+            _initNav: function() {
+                var e = this;   //e为navSelect
+                $("#poifilter-nav").find(".j-nav-item").click(function() {  //下拉列表的中的a标签被点击事件
+                    var t = $(this)  //a标签
+                            , n = t.data("itemname")     //a标签的类型  判断是区域，人气优先，模式
+                            , r = $("#j-main-sec")       //下面影院显示的dom
+                            , i = r.height()            //r的高度
+                            , s = $(window).height();   //可视区域的窗口的高度
+                    $("#poifilter-submenu-wrap").children().remove();  //清除下拉的选项的内容
+                    if (e._currMenu != n && n != 'no') {   //e._currMenu，默认为null；  当e._currMenu不为a标签的类型或者不为no时
+                        var o = $("#poifilter-nav").offset().top;  //选项栏内容的高
+                        $("body").addClass("body");   //body变为相对定位
+                        i < s && r.height(s - $("#poifilter-nav").height()).data("wh", !0);//如果影院的高度小于可视区域的高度，影院列表的高度等于可视区域的高度-选项框的高度增加data。wh属性
+                        setTimeout(function(){  //延时0.1s发生
+                            $("html, body").scrollTop(o);  //滚动到选项栏内容的高
+                            $("#poifilter-nav").find(".j-nav-item").removeClass("focus");  //a标签被除掉focus的class，字体为红色
+                            t.addClass("focus");  //点击的a标签变红
+                            var $tpl = $($('#tpl_' + n).html()).addClass(n);  //找到对应的script模板的html，dom增加对应的类型class
+                            $("#poifilter-submenu-wrap").append($tpl);  //将script模板添加到下拉列表中
+                            e._currMenu = n;     //e._currMenu变为对应的a标签类型
+                            e._showMask();          //给body增加蒙层
+                            e._ontherEvent();
+
+                        },100);
+
+                    } else
+                        e._closeMenu();
+                });
+            },
+            _ontherEvent:function(){
+                var _type,_online=0,
+                        e=this;
+                $("#choosecdt .film-type a").on("click",function(e){   //模式下的选项被选中，这段代码被注释了
+                    e.preventDefault();
+                    $(this).addClass("cur").siblings().removeClass("cur");  //选中的a标签增加cur，class
+                    $(this).parents('form').find('[name="module"]').val($(this).attr('data-type')); //form的value变为这个标签的data-type属性
+                    $("#choosecdt .btn").addClass('change');  //确定按钮增加change  class
+
+                });
+                $("#choosecdt .icon-uncheck").on("click",function(){   //被注释了   点击图标
+                    parseInt($(this).data("action"))===0 ? $(this).addClass("icon-xuanzhong")&&$(this).data("action","1"):$(this).removeClass("icon-xuanzhong")&&$(this).data("action","0");
+                    //被data-action=0就增加选中然后action变为1，否则变为1，移除选中
+                    $(this).parents('form').find('[name="reserve"]').val(!!$(this).hasClass('icon-xuanzhong')+0);
+                    $("#choosecdt .btn").addClass('change');
+                })
+                $("#choosecdt .btn").on("click",function(){
+                    var flog = $("#choosecdt .btn").hasClass('change');
+                    if(!flog){
+                        e._closeMenu();
+                    }
+                    return true;
+                })
+
+            },
+            _closeMenu: function() {
+                this._currMenu != null  && ($("#poifilter-nav").find(".j-nav-item").removeClass("focus"),
+                //如果_currMenu不为null，就移除字体变红
+                        $("#poifilter-submenu-wrap").children().remove(),  //移除下拉列表
+                        this._currMenu = null ,
+                        this._hideMask(),    //蒙层没有了
+                $("#j-main-sec").data("wh") && $("#j-main-sec").height("auto").removeAttr("data-wh"));  //影院的dom存data-wh的话就自动高度删除该属性
+                $("#poifilter-bar").removeClass("add_mune");  //相对定位
+            },
+            _showMask: function() {
+                if (this._$mask == null ) {
+                    this._$mask = $('<div id="showMask" style="position:absolute;z-index:100;background:rgba(0,0,0,.7);top:0;left:0;right:0;bottom:0;"></div>');
+                    this._$mask.appendTo("body");
+                }
+            },
+            _hideMask: function() {
+                this._$mask != null  && (this._$mask.remove(),
+                        this._$mask = null )
+            }
+        };
+        return e;
+    }
+    navSelect().init();
+    var str=-1;
+    console.log(+str);
 </script>
 </body>
 </html>
