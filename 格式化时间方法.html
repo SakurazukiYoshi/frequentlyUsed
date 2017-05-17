@@ -39,10 +39,14 @@
     /*使用方法：需要的参数，是事情的开始时间getTime和做事情需要的事件毫秒数                   */
     /*将两者的时间加起来算出结束的事件，然后根据需要显示的来定义format字符串的形式            */
     /*========================================================================================*/
+
+    console.log(dateFormat(1475,"hh:mm"));
     //得出今天的月份和日子，时间
     var data=new Date().getTime()/1000;
-    console.log("今天的月份和日期   "+dateFormat(data,"MM:dd"));
-    console.log("今天的小时和分钟和秒   "+dateFormat(data,"hh:mm:ss"));
+    //console.log("今天的月份和日期   "+dateFormat(data,"MM:dd"));
+    //console.log("今天的小时和分钟和秒   "+dateFormat(data,"hh:mm:ss"));
+
+
 
 
 
