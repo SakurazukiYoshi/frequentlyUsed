@@ -35,7 +35,9 @@
 
 <script src="js/zepto.min.js"></script>
 <script>
-    console.log($(window).height());
+    function addEvent(a, b, c) {
+        a.attachEvent ? a.attachEvent('on' + b, function () { c.call(a) }) : a.addEventListener(b, c, false);
+    }
 </script>
 </body>
 </html>

@@ -39,18 +39,18 @@
             scrollArea: window,
             loadDownFn: function(me) {
                 var url = $('.chipCant').data("url");  //对应影厅的数据连接
-                var num = $('.chipCant').data("count");   //个数
+                var num = $('.chipCant').data("count");   //影片的总个数
                 var pagesize = $('.chipCant').data("pagesize") || 10;    //每页显示的个数
-                var maxpage = Math.ceil(num / pagesize);   //进一法   总个数/10
+                var maxpage = Math.ceil(num / pagesize);   //进一法   总个数/10，一共有多少页
                 var number = $("#tabsOne .cur").attr("data-filmtype");  //最新  最热 被选中的那个的type
                 if (+num >= 10 && page <= maxpage) {  //总个数大于或者页数大于2
                     $.ajax({
                         type: 'GET',
                         url: url,
                         data: {
-                            p: page,
-                            cinema_host_name: "{:I('cinema_host_name')}",
-                            film_sort: number
+                            p: page,   //2
+                            cinema_host_name: "{:I('cinema_host_name')}",   //影院的名字
+                            film_sort: number     //选中type
                         },
                         dataType: 'json',
                         success: function(data) {

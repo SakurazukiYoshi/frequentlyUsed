@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/idangerous.swiper.css">
+
+</head>
+<body>
+<div class="model-color-white ptb80">
+    <div class="model-container wrapper">
+        <ul class="slideUp-container">
+            <li class="word-slideUp">
+                <img class="item-bg" src="images/Ic-img12.jpg" alt="">
+                <div class="mask">
+                    <div class="bg"></div>
+                    <div class="content">
+                        <p class="item-title">音乐一百度（泰禾)</p>
+                        <p class="item-text">影K改造先行军</p>
+                        <div class="item-desc">
+                            <p>
+                                携旅致力于打造“平台+渠道+内容+应用”的新型酒店生态模式。在众多酒店信息化服务商中，以客人的入住体验为核心，以人为本，为酒店提供方便客人入住的信息化服务系统，以此来增加酒店收益
+                                携旅致力于打造“平台+渠道+内容+应用”的新型酒店生态模式。在众多酒店信息化服务商中，以客人的入住体验为核心，以人为本，为酒店提供方便客人入住的信息化服务系统，以此来增加酒店收益
+                                携旅致力于打造“平台+渠道+内容+应用”的新型酒店生态模式。在众多酒店信息化服务商中，以客人的入住体验为核心，以人为本，为酒店提供方便客人入住的信息化服务系统，以此来增加酒店收益
+                            </p>
+                        </div>
+                        <a href="#" class="item-link">进一步了解</a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+
+<div class="model-color-black">
+    <div class="model-container wrapper">
+        <div class="image-switch">
+            <div class="left">
+                <a class="xy-center img-left" href="#">
+                    <img src="images/icon_arrow_left.png" alt="">
+                </a>
+            </div>
+            <div class="right">
+                <a class="xy-center img-right" href="#">
+                    <img src="images/icon_arrow_right.png" alt="">
+                </a>
+            </div>
+            <div class="image-switch-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="images/Ic-img11.jpg">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/you.jpg">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/au-banner01.jpg">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/cc-img01.jpg">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/au-banner02.jpg">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/person.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="plugins/jquery-1.10.1.min.js"></script>
+<script src="plugins/idangerous.swiper.min.js"></script>
+<script>
+    $(function(){
+        var imageSwitch = new Swiper('.image-switch-container',{
+            loop:true
+        });
+        $('.img-left').parent().on('click', function(e){
+            e.preventDefault();
+            imageSwitch.swipePrev();
+        });
+        $('.img-right').parent().on('click', function(e){
+            e.preventDefault();
+            imageSwitch.swipeNext();
+        })
+    });
+</script>
+</body>
+</html>
